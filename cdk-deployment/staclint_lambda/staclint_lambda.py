@@ -1,20 +1,24 @@
 import json
 import tempfile
-import urllib
 from typing import Dict
-
 import requests
 from requests.exceptions import MissingSchema, JSONDecodeError
 from stac_check import lint
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from mangum import Mangum
 from stac_validator import stac_validator
 from starlette.responses import JSONResponse
+from pydantic import BaseModel
 
 # this is used to push to aws cdk with prod endpoint
-app = FastAPI(title="STAC Validator", version=2.0, root_path="/prod/")
+app = FastAPI(title="STAC Validator", version=2.0)
+
+
+class StacURL(BaseModel):
+    stac_url: str
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -92,20 +96,9 @@ async def validate_url_get_request(stac_url):
 
 
 @app.post("/url")
-async def validate_url_post_request(request: Request):
+async def validate_url_post_request(request: StacURL):
     try:
         stac_url_json = await request.json()
-        if not "stac_url" in stac_url_json:
-            return JSONResponse(
-                status_code=400,
-                content={
-                    "body": {
-                        "error": "Invalid stac url JSON. Requires field 'stac_url'"
-                    }
-                },
-            )
-
-        # process stac url
         stac_url = stac_url_json["stac_url"]
         request = requests.get(stac_url)
         stac_object_dict = request.json()
@@ -195,5 +188,4 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
-
 handler = Mangum(app)
