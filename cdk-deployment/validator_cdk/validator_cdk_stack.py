@@ -6,11 +6,15 @@ from pathlib import Path
 
 from aws_cdk import aws_apigateway as apigw
 from aws_cdk import aws_lambda as _lambda
-from aws_cdk import core as cdk
+
+from constructs import Construct
+
+# from aws_cdk import core as cdk
+import aws_cdk as cdk
 
 
 class ValidatorCdkStack(cdk.Stack):
-    def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         build_path = Path("../")
@@ -20,12 +24,12 @@ class ValidatorCdkStack(cdk.Stack):
         validator_lambda = _lambda.Function(
             self,
             "STACValidator",
-            runtime=_lambda.Runtime.PYTHON_3_8,
+            runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_docker_build(
                 path=str(build_path.resolve()),
-                file="cdk-deployment/lambda/Dockerfile",
+                file="cdk-deployment/aws_lambda/Dockerfile",
             ),
-            handler="lambda.handler",
+            handler="aws_lambda.handler",
             timeout=cdk.Duration.seconds(30),
         )
 
@@ -33,7 +37,7 @@ class ValidatorCdkStack(cdk.Stack):
 
         apigw.LambdaRestApi(
             self,
-            "Endpoint",
+            "Staclint Endpoint",
             handler=validator_lambda,
             default_cors_preflight_options=cors,
         )
