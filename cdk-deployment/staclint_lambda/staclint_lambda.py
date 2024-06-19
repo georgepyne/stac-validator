@@ -35,7 +35,6 @@ def validate(stac_object_dict: Dict | str):
         lint_result = linter.create_best_practices_dict()
         output = linter.message
         output["lint"] = lint_result
-        print(lint_result)
     except KeyError as e:
         # If JSON parsed and stac is invalid
         # use stac validator lib for validation

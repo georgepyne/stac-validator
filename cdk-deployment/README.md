@@ -7,38 +7,13 @@ cdk diff --profile stac-validator
 cdk deploy --profile stac-validator
 ```
 
-## GET a STAC url
-
-```bash
-curl --request GET \
-
-https://api.staclint.com/url?stac_url=https://raw.githubusercontent.com/radiantearth/stac-spec/master/examples/extended-item.json
-
-{
-  "version": "1.0.0-rc.3",
-  "path": "https://raw.githubusercontent.com/radiantearth/stac-spec/master/examples/extended-item.json",
-  "schema": [
-    "https://schemas.stacspec.org/v1.0.0-rc.3/item-spec/json-schema/item.json",
-    "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/view/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/remote-data/v1.0.0/schema.json"
-  ],
-  "asset_type": "ITEM",
-  "validation_method": "default",
-  "valid_stac": true
-}
-
-```
-
 ## Post a STAC url 
 
 ```bash
 curl --request POST \
 --header "Content-Type: Application/json" \
 --data '{"stac_file": "https://raw.githubusercontent.com/radiantearth/stac-spec/master/examples/extended-item.json"}' \
-https://api.staclint.com/url
+https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/prod/
 
 {
   "version": "1.0.0-rc.3",
@@ -64,7 +39,7 @@ https://api.staclint.com/url
 curl --request POST \
 --header "Content-Type: application/json" \
 --data @./tests/test_data/v090/items/landsat8-sample.json \
-https://api.staclint.com/json
+https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/prod/
 
 {
   "version": "0.9.0",
@@ -77,8 +52,5 @@ https://api.staclint.com/json
   "asset_type": "ITEM",
   "valid_stac": true
 }
-
-
-
 
 ```

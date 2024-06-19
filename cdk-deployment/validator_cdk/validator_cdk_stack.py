@@ -27,9 +27,9 @@ class ValidatorCdkStack(cdk.Stack):
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_docker_build(
                 path=str(build_path.resolve()),
-                file="cdk-deployment/aws_lambda/Dockerfile",
+                file="cdk-deployment/staclint_lambda/Dockerfile",
             ),
-            handler="aws_lambda.handler",
+            handler="staclint_lambda.handler",
             timeout=cdk.Duration.seconds(30),
         )
 
