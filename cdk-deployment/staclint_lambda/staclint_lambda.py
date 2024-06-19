@@ -96,10 +96,10 @@ async def validate_url_get_request(stac_url):
 
 
 @app.post("/url")
-async def validate_url_post_request(request: StacURL):
+async def validate_url_post_request(stac_url_object: StacURL):
     try:
-        stac_url_json = await request.json()
-        stac_url = stac_url_json["stac_url"]
+        stac_url_json = stac_url_object
+        stac_url = stac_url_json.stac_url
         request = requests.get(stac_url)
         stac_object_dict = request.json()
         output = validate(stac_object_dict)
